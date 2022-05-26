@@ -1,8 +1,12 @@
 terraform {
   required_providers {
-    hashicups = {
+    foo = {
       version = "~> 0.3.1"
       source  = "ransford.org/edu/foo"
     }
   }
+}
+
+provider "foo" {
+  access_key = "foobar"
 }
