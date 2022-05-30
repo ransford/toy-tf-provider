@@ -14,6 +14,10 @@ func resourceFoo() *schema.Resource {
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
+			"access_key": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"foo": {
 				Type:     schema.TypeInt,
 				Required: true,
