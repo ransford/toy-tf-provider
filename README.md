@@ -7,8 +7,7 @@ To use:
 
     go run ./cmd/server &
 
-    cd footf
-    terraform init
+    cd terraform
     $EDITOR main.tf   # change the foo_thing resource
     terraform plan
     terraform apply

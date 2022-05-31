@@ -1,13 +1,13 @@
 terraform {
   required_providers {
-    fooer = {
+    foo = {
       version = "~> 0.0.1"
-      source  = "github.com/ransford/tf-provider-fooer"
+      source  = "ransford.org/edu/foo"
     }
   }
 }
 
-provider "fooer" {
+provider "foo" {
   hostport = "localhost:8090"
 }
 

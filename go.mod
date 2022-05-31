@@ -1,4 +1,4 @@
-module github.com/ransford/tf-provider-fooer
+module ransford.org/edu/foo
 
 go 1.18
 
