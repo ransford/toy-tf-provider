@@ -1,13 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 var barVal = 13
+
+type FooThing struct {
+	Bar int `json:"bar"`
+}
 
 func getBar(w http.ResponseWriter, req *http.Request) {
 	log.Printf("got bar = %d\n", barVal)
@@ -17,17 +21,13 @@ func getBar(w http.ResponseWriter, req *http.Request) {
 func putBar(w http.ResponseWriter, req *http.Request) {
 	log.Println("in putBar")
 
-	// TODO: input is JSON, so decode JSON
-	_newBar := req.FormValue("bar")
-	log.Printf("new bar: %s", _newBar)
-
-	var newBar int
-	var err error
-	if newBar, err = strconv.Atoi(_newBar); err != nil {
+	var ft FooThing
+	err := json.NewDecoder(req.Body).Decode(&ft)
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	barVal = newBar
+	barVal = ft.Bar
 	log.Printf("stored bar = %d\n", barVal)
 	getBar(w, req)
 }

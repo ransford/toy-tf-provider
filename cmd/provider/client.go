@@ -46,13 +46,17 @@ func (f *FooClient) GetBar(id string) (int, error) {
 
 func (f *FooClient) SetBar(id string, newval int) error {
 	body := fmt.Sprintf("{\"bar\": %d}", newval)
-	cli := &http.Client{}
-	req, _ := http.NewRequest(http.MethodPut, f.endpoint, strings.NewReader(body))
-	req.Header.Set("Content-Type", "application/json")
-	resp, err := cli.Do(req)
+	req, err := http.NewRequest(http.MethodPut, f.endpoint, strings.NewReader(body))
 	if err != nil {
 		return err
 	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+
 	resp.Body.Close()
 	return nil
 }
