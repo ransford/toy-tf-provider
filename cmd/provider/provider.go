@@ -8,7 +8,52 @@ import (
 )
 
 func resourceFoo() *schema.Resource {
-	return &schema.Resource{}
+	return &schema.Resource{
+		CreateContext: resourceFooCreate,
+		ReadContext:   resourceFooRead,
+		UpdateContext: resourceFooUpdate,
+		DeleteContext: resourceFooDelete,
+		Schema: map[string]*schema.Schema{
+			"beep": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+		},
+	}
+}
+
+func resourceFooCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	c := m.(*FooClient)
+	s := c.CreateFoo()
+	d.SetId(s)
+	resourceFooRead(ctx, d, m) // TODO is this necessary?
+	return diags
+}
+
+func resourceFooRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	id := d.Id()
+	c := m.(*FooClient)
+	beep := c.GetFoo(id)
+	d.Set("beep", beep)
+	return diags
+}
+
+func resourceFooUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*FooClient)
+	id := d.Id()
+
+	if d.HasChange("beep") {
+		newBeep := d.Get("beep").(string)
+		c.SetFoo(id, newBeep)
+	}
+
+	return resourceFooRead(ctx, d, m)
+}
+
+func resourceFooDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	panic("delete not implemented")
 }
 
 func Provider() *schema.Provider {

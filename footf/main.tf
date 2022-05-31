@@ -13,6 +13,8 @@ provider "foo" {
 }
 
 resource "foo_thing" "mine" {
+  beep = "blorp"
+  // fooval = 13
 }
 
 output "thing" {
