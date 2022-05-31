@@ -84,7 +84,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	accessKey := d.Get("access_key").(string)
 	var diags diag.Diagnostics
 	if accessKey != "" {
-		return &FooClient{accessKey: accessKey}, diags
+		return NewClient("localhost:8090", accessKey), diags
 	}
 	return nil, nil
 }

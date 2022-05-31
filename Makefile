@@ -14,3 +14,4 @@ init:
 
 clean:
 	cd footf && rm -rf .terraform .terraform.lock.hcl
+	$(RM) server

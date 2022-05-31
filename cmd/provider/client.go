@@ -1,12 +1,18 @@
 package provider
 
 type FooClient struct {
+	hostport  string
 	accessKey string
 
 	beep string
 }
 
-// TODO NewClient that takes connection info
+func NewClient(hostport, accessKey string) *FooClient {
+	return &FooClient{
+		hostport:  hostport,
+		accessKey: accessKey,
+	}
+}
 
 func (f *FooClient) CreateFoo() string {
 	// Doesn't actually create anything
