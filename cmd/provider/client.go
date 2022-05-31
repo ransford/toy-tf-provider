@@ -1,30 +1,49 @@
 package provider
 
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
 type FooClient struct {
 	hostport  string
 	accessKey string
 
-	beep string
+	endpoint string
+}
+
+type FooThing struct {
+	Bar int `json:"bar"`
 }
 
 func NewClient(hostport, accessKey string) *FooClient {
 	return &FooClient{
 		hostport:  hostport,
 		accessKey: accessKey,
+		endpoint:  fmt.Sprintf("http://%s/foo", hostport),
 	}
 }
 
 func (f *FooClient) CreateFoo() string {
-	// Doesn't actually create anything
-	f.beep = "twelve"
-	return "newfoo"
+	return "the only foo"
 }
 
-func (f *FooClient) GetFoo(id string) string {
-	return f.beep // TODO replace with JSON fetch
+func (f *FooClient) GetBar(id string) (int, error) {
+	resp, err := http.Get(f.endpoint)
+	if err != nil {
+		return -1, err
+	}
+
+	var ft FooThing
+	err = json.NewDecoder(resp.Body).Decode(&ft)
+	if err != nil {
+		return -1, err
+	}
+	return ft.Bar, nil
 }
 
-func (f *FooClient) SetFoo(id string, newval string) error {
-	f.beep = newval
+func (f *FooClient) SetBar(id string, newval int) error {
+	// TODO
 	return nil
 }

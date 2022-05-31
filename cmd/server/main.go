@@ -6,30 +6,30 @@ import (
 	"strconv"
 )
 
-var fooVal = 3
+var barVal = 3
 
-func getFoo(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "{\"foo\": %d}\n", fooVal)
+func getBar(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "{\"bar\": %d}\n", barVal)
 }
 
-func putFoo(w http.ResponseWriter, req *http.Request) {
+func putBar(w http.ResponseWriter, req *http.Request) {
 	_newFoo := req.FormValue("foo")
-	var newFoo int
+	var newBar int
 	var err error
-	if newFoo, err = strconv.Atoi(_newFoo); err != nil {
+	if newBar, err = strconv.Atoi(_newFoo); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fooVal = newFoo
-	getFoo(w, req)
+	barVal = newBar
+	getBar(w, req)
 }
 
 func fooer(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
-		getFoo(w, req)
+		getBar(w, req)
 	case "PUT":
-		putFoo(w, req)
+		putBar(w, req)
 	}
 }
 

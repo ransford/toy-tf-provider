@@ -8,13 +8,12 @@ terraform {
 }
 
 provider "foo" {
-  foo = 12
+  hostport = "localhost:8090"
   access_key = "moo"
 }
 
 resource "foo_thing" "mine" {
-  beep = "blorp"
-  // fooval = 13
+  bar = 31337
 }
 
 output "thing" {

@@ -14,8 +14,8 @@ func resourceFoo() *schema.Resource {
 		UpdateContext: resourceFooUpdate,
 		DeleteContext: resourceFooDelete,
 		Schema: map[string]*schema.Schema{
-			"beep": {
-				Type:     schema.TypeString,
+			"bar": {
+				Type:     schema.TypeInt,
 				Required: true,
 			},
 		},
@@ -23,20 +23,21 @@ func resourceFoo() *schema.Resource {
 }
 
 func resourceFooCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
 	c := m.(*FooClient)
 	s := c.CreateFoo()
 	d.SetId(s)
-	resourceFooRead(ctx, d, m) // TODO is this necessary?
-	return diags
+	return resourceFooRead(ctx, d, m)
 }
 
 func resourceFooRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	id := d.Id()
 	c := m.(*FooClient)
-	beep := c.GetFoo(id)
-	d.Set("beep", beep)
+	bar, err := c.GetBar(id)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.Set("bar", bar)
 	return diags
 }
 
@@ -44,9 +45,12 @@ func resourceFooUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 	c := m.(*FooClient)
 	id := d.Id()
 
-	if d.HasChange("beep") {
-		newBeep := d.Get("beep").(string)
-		c.SetFoo(id, newBeep)
+	if d.HasChange("bar") {
+		newBar := d.Get("bar").(int)
+		err := c.SetBar(id, newBar)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
 	return resourceFooRead(ctx, d, m)
@@ -59,18 +63,13 @@ func resourceFooDelete(ctx context.Context, d *schema.ResourceData, m interface{
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
+			"hostport": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"access_key": {
 				Type:     schema.TypeString,
 				Required: true,
-			},
-			"foo": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
-			"email": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -81,10 +80,11 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+	hostport := d.Get("hostport").(string)
 	accessKey := d.Get("access_key").(string)
 	var diags diag.Diagnostics
 	if accessKey != "" {
-		return NewClient("localhost:8090", accessKey), diags
+		return NewClient(hostport, accessKey), diags
 	}
 	return nil, nil
 }
