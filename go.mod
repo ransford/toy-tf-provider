@@ -1,4 +1,4 @@
-module github.com/ransford/tfexample
+module github.com/ransford/tf-provider-fooer
 
 go 1.18
 

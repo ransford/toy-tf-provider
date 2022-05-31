@@ -1,17 +1,9 @@
-MODULE   := ransford.org/edu/foo
-MODVER   := 0.3.1
+MODULE   := $(shell grep \^module go.mod | cut -d' ' -f2)
+MODVER   := 0.0.1
 ARCH     := $(shell uname -m)
 OS       := $(shell uname -s | tr A-Z a-z)
-PROVPATH := ~/.terraform.d/plugins/$(MODULE)/$(MODVER)/$(OS)_$(ARCH)/terraform-provider-foo
+PROVPATH := ~/.terraform.d/plugins/$(MODULE)/$(MODVER)/$(OS)_$(ARCH)/terraform-provider-fooer
 
-all: clean build init
-
+.PHONY: build
 build:
 	go build -o $(PROVPATH)
-
-init:
-	cd footf && terraform init
-
-clean:
-	cd footf && rm -rf .terraform .terraform.lock.hcl
-	$(RM) server
