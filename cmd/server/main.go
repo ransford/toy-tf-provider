@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -26,6 +27,7 @@ func putBar(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	barVal = ft.Bar
+	log.Printf("stored bar = %d\n", barVal)
 	getBar(w, req)
 }
 
