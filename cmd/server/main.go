@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -9,6 +10,7 @@ import (
 var barVal = 3
 
 func getBar(w http.ResponseWriter, req *http.Request) {
+	log.Printf("got bar = %d\n", barVal)
 	fmt.Fprintf(w, "{\"bar\": %d}\n", barVal)
 }
 
@@ -21,6 +23,7 @@ func putBar(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	barVal = newBar
+	log.Printf("stored bar = %d\n", barVal)
 	getBar(w, req)
 }
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 type FooClient struct {
@@ -44,6 +45,14 @@ func (f *FooClient) GetBar(id string) (int, error) {
 }
 
 func (f *FooClient) SetBar(id string, newval int) error {
-	// TODO
+	body := fmt.Sprintf("{\"bar\": %d}", newval)
+	cli := &http.Client{}
+	req, _ := http.NewRequest(http.MethodPut, f.endpoint, strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := cli.Do(req)
+	if err != nil {
+		return err
+	}
+	resp.Body.Close()
 	return nil
 }
