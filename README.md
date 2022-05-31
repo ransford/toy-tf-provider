@@ -8,6 +8,11 @@ To use:
     go run ./cmd/server &
 
     cd terraform
+    terraform init
+    terraform apply
+
+Now change something:
+
     $EDITOR main.tf   # change the foo_thing resource
     terraform plan
     terraform apply
