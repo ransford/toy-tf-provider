@@ -7,10 +7,8 @@ import (
 	"strings"
 )
 
+// FooClient is an API client for the simple JSON-over-HTTP server in cmd/server.
 type FooClient struct {
-	hostport  string
-	accessKey string
-
 	endpoint string
 }
 
@@ -18,18 +16,19 @@ type FooThing struct {
 	Bar int `json:"bar"`
 }
 
-func NewClient(hostport, accessKey string) *FooClient {
+func NewClient(hostport string) *FooClient {
 	return &FooClient{
-		hostport:  hostport,
-		accessKey: accessKey,
-		endpoint:  fmt.Sprintf("http://%s/foo", hostport),
+		endpoint: fmt.Sprintf("http://%s/foo", hostport),
 	}
 }
 
+// CreateFoo returns a static identifier that identifies the resource Terraform
+// thinks it's creating, updating, or deleting.
 func (f *FooClient) CreateFoo() string {
 	return "the only foo"
 }
 
+// GetBar returns the `bar` value from the simple HTTP server.
 func (f *FooClient) GetBar(id string) (int, error) {
 	resp, err := http.Get(f.endpoint)
 	if err != nil {
@@ -44,6 +43,7 @@ func (f *FooClient) GetBar(id string) (int, error) {
 	return ft.Bar, nil
 }
 
+// SetBar sets the `bar` value on the simple HTTP server.
 func (f *FooClient) SetBar(id string, newval int) error {
 	body := fmt.Sprintf("{\"bar\": %d}", newval)
 	req, err := http.NewRequest(http.MethodPut, f.endpoint, strings.NewReader(body))

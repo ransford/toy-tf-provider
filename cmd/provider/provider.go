@@ -67,10 +67,6 @@ func Provider() *schema.Provider {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"access_key": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"foo_thing": resourceFoo(),
@@ -81,10 +77,5 @@ func Provider() *schema.Provider {
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	hostport := d.Get("hostport").(string)
-	accessKey := d.Get("access_key").(string)
-	var diags diag.Diagnostics
-	if accessKey != "" {
-		return NewClient(hostport, accessKey), diags
-	}
-	return nil, nil
+	return NewClient(hostport), nil
 }
